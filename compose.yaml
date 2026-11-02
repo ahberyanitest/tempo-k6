@@ -1,0 +1,122 @@
+name: tempo-k6
+
+services:
+  frontend:
+    build: ./frontend
+    ports:
+      - "5173:5173"
+    environment:
+      VITE_API_URL: http://localhost:8080
+    depends_on:
+      - gateway
+
+  gateway:
+    build: ./services/gateway
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      CATALOG_URL: http://catalog:8081
+      OTEL_SERVICE_NAME: gateway
+      MANAGEMENT_OTLP_TRACING_ENDPOINT: http://tempo:4318/v1/traces
+      MANAGEMENT_OTLP_METRICS_EXPORT_ENABLED: "false"
+      LOKI_URL: http://loki:3100/loki/api/v1/push
+    depends_on:
+      - catalog
+      - tempo
+      - loki
+
+  catalog:
+    build: ./services/catalog
+    ports:
+      - "8081:8081"
+    environment:
+      SERVER_PORT: 8081
+      INVENTORY_URL: http://inventory:8082
+      OTEL_SERVICE_NAME: catalog
+      MANAGEMENT_OTLP_TRACING_ENDPOINT: http://tempo:4318/v1/traces
+      MANAGEMENT_OTLP_METRICS_EXPORT_ENABLED: "false"
+      LOKI_URL: http://loki:3100/loki/api/v1/push
+    depends_on:
+      - inventory
+      - tempo
+      - loki
+
+  inventory:
+    build: ./services/inventory
+    ports:
+      - "8082:8082"
+    environment:
+      SERVER_PORT: 8082
+      OTEL_SERVICE_NAME: inventory
+      MANAGEMENT_OTLP_TRACING_ENDPOINT: http://tempo:4318/v1/traces
+      MANAGEMENT_OTLP_METRICS_EXPORT_ENABLED: "false"
+      LOKI_URL: http://loki:3100/loki/api/v1/push
+    depends_on:
+      - tempo
+      - loki
+
+  prometheus:
+    image: prom/prometheus:v3.2.1
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --web.enable-remote-write-receiver
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./observability/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    depends_on:
+      - gateway
+      - catalog
+      - inventory
+
+  loki:
+    image: grafana/loki:3.4.2
+    command: -config.file=/etc/loki/local-config.yaml
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./observability/loki-config.yaml:/etc/loki/local-config.yaml:ro
+      - loki-data:/loki
+
+  tempo:
+    image: grafana/tempo:2.7.2
+    command: -config.file=/etc/tempo/tempo.yaml
+    ports:
+      - "3200:3200"
+      - "4317:4317"
+      - "4318:4318"
+    volumes:
+      - ./observability/tempo.yaml:/etc/tempo/tempo.yaml:ro
+      - tempo-data:/var/tempo
+
+  grafana:
+    image: grafana/grafana:11.5.2
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_USERS_ALLOW_SIGN_UP: "false"
+    volumes:
+      - ./observability/grafana/provisioning:/etc/grafana/provisioning:ro
+      - grafana-data:/var/lib/grafana
+    depends_on:
+      - prometheus
+      - loki
+      - tempo
+
+  k6:
+    image: grafana/k6:0.57.0
+    profiles: ["testing"]
+    volumes:
+      - ./k6:/scripts:ro
+    environment:
+      BASE_URL: http://gateway:8080
+    depends_on:
+      - gateway
+
+volumes:
+  grafana-data:
+  loki-data:
+  tempo-data:
