@@ -36,6 +36,18 @@ h1 em { color: var(--forest); }
 .section-heading .eyebrow { margin-bottom: 7px; }
 h2 { font-size: 21px; font-weight: 600; margin: 0; letter-spacing: 0; }
 h2 span { vertical-align: 3px; color: var(--muted); font: 11px 'DM Mono', monospace; margin-left: 5px; }
+.product-form { display: grid; grid-template-columns: minmax(140px, 0.8fr) minmax(200px, 1.3fr) auto; align-items: end; gap: 12px; border-top: 1px solid var(--line); padding: 18px 0; }
+.product-form label { display: grid; gap: 7px; min-width: 0; color: var(--muted); font: 10px 'DM Mono', monospace; letter-spacing: 0.08em; text-transform: uppercase; }
+.product-form input { width: 100%; min-width: 0; height: 42px; border: 1px solid #cbd3c9; border-radius: 2px; padding: 0 11px; background: #fbfcf9; color: var(--ink); font: 14px 'DM Sans', sans-serif; letter-spacing: 0; }
+.product-form input:focus { outline: 2px solid #78917f; outline-offset: 1px; border-color: transparent; }
+.product-form input::placeholder { color: #a0a89f; }
+.add-button { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 42px; border: 1px solid var(--forest); border-radius: 2px; padding: 0 16px; background: var(--forest); color: #fff; cursor: pointer; font-size: 13px; font-weight: 600; white-space: nowrap; }
+.add-button:hover { background: #18392c; }
+.add-button:disabled { opacity: 0.55; cursor: wait; }
+.add-button span { font-size: 19px; line-height: 1; font-weight: 400; }
+.form-feedback { grid-column: 1 / -1; margin: 0; color: #416b4d; font-size: 12px; }
+.form-feedback:empty { display: none; }
+.form-feedback.is-error { color: #9c463e; }
 .refresh-button { display: grid; place-items: center; width: 38px; height: 38px; border: 1px solid var(--line); border-radius: 50%; background: transparent; color: var(--ink); cursor: pointer; }
 .refresh-button:hover { background: var(--forest); color: white; border-color: var(--forest); }
 .refresh-button:disabled { opacity: 0.5; cursor: wait; }
@@ -70,6 +82,8 @@ h2 span { vertical-align: 3px; color: var(--muted); font: 11px 'DM Mono', monosp
   .topbar { height: 62px; }
   .intro { padding: 52px 0 45px; }
   .intro::after { right: 2%; top: 74px; width: 108px; height: 108px; opacity: 0.65; }
+  .product-form { grid-template-columns: 1fr; gap: 12px; }
+  .add-button { width: 100%; }
   .product-row { grid-template-columns: 62px 1fr 55px; gap: 12px; min-height: 95px; }
   .product-art { width: 58px; height: 58px; }
   .product-info h3 { font-size: 15px; }

@@ -7,7 +7,7 @@ Browser / k6 -> React (5173) -> Spring Cloud Gateway (8080)
 						 -> Catalog service (8081) -> Inventory service (8082)
 ```
 
-The Spring services export traces to Tempo over OTLP, expose Prometheus metrics at `/actuator/prometheus`, and write logs to stdout. Grafana Alloy collects container logs and sends them to Loki. Tempo's metrics generator creates service-graph and span metrics and remote-writes them to Prometheus.
+The Spring services export traces to Tempo over OTLP, expose Prometheus metrics at `/actuator/prometheus`, and write logs to stdout. Grafana Alloy collects container logs and sends them to Loki. Tempo's metrics generator creates service-graph and span metrics and remote-writes them to Prometheus. The catalog stores products in PostgreSQL; the database volume keeps them across restarts.
 
 ## Start the stack
 
@@ -28,7 +28,7 @@ Open:
 - Tempo: <http://localhost:3200>
 - Loki: <http://localhost:3100>
 
-The demo catalog endpoint is `GET http://localhost:8080/api/products`. It returns three sample products and calls inventory once for each product. The inventory endpoint is `GET http://localhost:8082/api/inventory/{sku}`.
+The catalog seeds three sample products the first time its database is empty. Use the form in the React app to add products, or send `POST http://localhost:8080/api/products` with JSON such as `{"sku":"sku-404","name":"Trail Mug"}`. The catalog endpoint `GET http://localhost:8080/api/products` reads persisted products and calls inventory once for each product. The inventory endpoint is `GET http://localhost:8082/api/inventory/{sku}`.
 
 Each Spring service publishes its OpenAPI document at `/v3/api-docs`. The gateway Swagger UI aggregates the Catalog and Inventory specifications and can send requests through the gateway.
 
