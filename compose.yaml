@@ -20,7 +20,6 @@ services:
       OTEL_SERVICE_NAME: gateway
       MANAGEMENT_OTLP_TRACING_ENDPOINT: http://tempo:4318/v1/traces
       MANAGEMENT_OTLP_METRICS_EXPORT_ENABLED: "false"
-      LOKI_URL: http://loki:3100/loki/api/v1/push
     depends_on:
       - catalog
       - tempo
@@ -36,7 +35,6 @@ services:
       OTEL_SERVICE_NAME: catalog
       MANAGEMENT_OTLP_TRACING_ENDPOINT: http://tempo:4318/v1/traces
       MANAGEMENT_OTLP_METRICS_EXPORT_ENABLED: "false"
-      LOKI_URL: http://loki:3100/loki/api/v1/push
     depends_on:
       - inventory
       - tempo
@@ -51,7 +49,6 @@ services:
       OTEL_SERVICE_NAME: inventory
       MANAGEMENT_OTLP_TRACING_ENDPOINT: http://tempo:4318/v1/traces
       MANAGEMENT_OTLP_METRICS_EXPORT_ENABLED: "false"
-      LOKI_URL: http://loki:3100/loki/api/v1/push
     depends_on:
       - tempo
       - loki
@@ -90,6 +87,20 @@ services:
       - ./observability/tempo.yaml:/etc/tempo/tempo.yaml:ro
       - tempo-data:/var/tempo
 
+  alloy:
+    image: grafana/alloy:v1.7.5
+    command:
+      - run
+      - --server.http.listen-addr=0.0.0.0:12345
+      - --storage.path=/var/lib/alloy/data
+      - /etc/alloy/config.alloy
+    volumes:
+      - ./observability/alloy-config.alloy:/etc/alloy/config.alloy:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - alloy-data:/var/lib/alloy/data
+    depends_on:
+      - loki
+
   grafana:
     image: grafana/grafana:11.5.2
     ports:
@@ -120,3 +131,4 @@ volumes:
   grafana-data:
   loki-data:
   tempo-data:
+  alloy-data:

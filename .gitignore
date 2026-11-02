@@ -1,0 +1,8 @@
+# Build output
+**/target/
+frontend/node_modules/
+frontend/dist/
+
+# Local environment
+.env
+.DS_Store
