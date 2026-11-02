@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import LoadTestPage from './LoadTest.jsx';
 
 const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 
@@ -10,6 +11,7 @@ export default function App() {
   const [saving, setSaving] = useState(false);
   const [formMessage, setFormMessage] = useState('');
   const [formError, setFormError] = useState(false);
+  const isLoadTestPage = window.location.pathname === '/load-test';
 
   async function loadProducts() {
     setState('loading');
@@ -65,8 +67,8 @@ export default function App() {
   }
 
   useEffect(() => {
-    loadProducts();
-  }, []);
+    if (!isLoadTestPage) loadProducts();
+  }, [isLoadTestPage]);
 
   return (
     <main className="page-shell">
@@ -75,9 +77,14 @@ export default function App() {
           <span className="mark" aria-hidden="true">F</span>
           FIELDWORK <span>SUPPLY CO.</span>
         </a>
-        <div className="topbar-status"><span className={`status-dot ${state === 'ready' ? 'is-live' : ''}`} />CATALOG API</div>
+        <nav className="topbar-links" aria-label="Main navigation">
+          <a className={!isLoadTestPage ? 'is-active' : ''} href="/">Catalog</a>
+          <a className={isLoadTestPage ? 'is-active' : ''} href="/load-test">Load test</a>
+        </nav>
       </header>
 
+      {isLoadTestPage ? <LoadTestPage /> : (
+        <>
       <section className="intro">
         <p className="eyebrow">EVERYDAY EQUIPMENT / ISSUE 01</p>
         <h1>Made for the<br /><em>long way around.</em></h1>
@@ -149,6 +156,8 @@ export default function App() {
           <span>LIVE INVENTORY</span>
         </div>
       </section>
+        </>
+      )}
 
       <footer className="page-footer">
         <span>FIELDWORK SUPPLY CO. / 2026</span>

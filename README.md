@@ -20,6 +20,7 @@ docker compose up --build -d
 Open:
 
 - React app: <http://localhost:5173>
+- k6 test runner: open the **Load test** tab in the React app to configure and start a run
 - Gateway Swagger UI (Catalog and Inventory APIs): <http://localhost:8080/swagger-ui.html>
 - Catalog Swagger UI: <http://localhost:8081/swagger-ui.html>
 - Inventory Swagger UI: <http://localhost:8082/swagger-ui.html>
@@ -34,13 +35,15 @@ Each Spring service publishes its OpenAPI document at `/v3/api-docs`. The gatewa
 
 ## Run the performance test
 
-Run k6 in the Compose network so it reaches the gateway by service name:
+Start a test from the React app's **Load test** tab. Select the peak virtual users and duration, then start the browse scenario. The page shows run status, request rate, p95 latency, checks, and failed-request rate. The runner allows one test at a time and keeps the latest result until it is replaced by another run.
+
+The existing command-line workflow is also available:
 
 ```bash
 docker compose run --rm k6 run /scripts/browse.js
 ```
 
-The scenario ramps from 1 to 15 virtual users and checks that requests succeed, return all products, and stay below the configured p95 threshold. It drives traffic through the same gateway endpoint used by the React app.
+The default scenario ramps from 1 to 15 virtual users over 80 seconds and checks that requests succeed, return all products, and stay below the configured p95 threshold. UI runs use the selected peak and duration while driving traffic through the same gateway endpoint used by the React app.
 
 ## Explore telemetry
 

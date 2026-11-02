@@ -18,6 +18,10 @@ body { margin: 0; min-width: 320px; background: #f2f4ef; }
 button { font: inherit; }
 .page-shell { width: min(1120px, calc(100% - 64px)); margin: 0 auto; }
 .topbar { height: 74px; border-bottom: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; }
+.topbar-links { display: flex; align-items: center; gap: 24px; height: 100%; }
+.topbar-links a { display: flex; align-items: center; height: 100%; border-bottom: 2px solid transparent; color: var(--muted); text-decoration: none; font-size: 12px; }
+.topbar-links a:hover, .topbar-links a.is-active { color: var(--forest); }
+.topbar-links a.is-active { border-bottom-color: var(--forest); }
 .wordmark { display: flex; align-items: center; gap: 9px; color: var(--ink); text-decoration: none; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; }
 .wordmark > span:last-child { color: var(--muted); font-weight: 500; }
 .mark { display: grid; width: 27px; height: 27px; place-items: center; background: var(--forest); color: var(--lime); font-family: 'Playfair Display', serif; font-size: 17px; }
@@ -76,10 +80,36 @@ h2 span { vertical-align: 3px; color: var(--muted); font: 11px 'DM Mono', monosp
 .catalog-footer, .page-footer { display: flex; justify-content: space-between; gap: 18px; color: var(--muted); }
 .catalog-footer { padding: 15px 0 38px; }
 .page-footer { border-top: 1px solid var(--line); padding: 18px 0 28px; }
+.loadtest-intro { padding-bottom: 48px; }
+.loadtest { border-top: 1px solid var(--ink); }
+.run-badge { display: flex; align-items: center; gap: 8px; color: var(--muted); font: 10px 'DM Mono', monospace; letter-spacing: 0.08em; }
+.run-badge .status-dot { background: #c6a262; }
+.run-badge.is-running .status-dot { background: #d39a45; animation: pulse 1.2s infinite; }
+.run-badge.is-complete .status-dot { background: #528b62; }
+.run-form { display: grid; grid-template-columns: minmax(140px, 0.8fr) minmax(240px, 1.3fr) auto; align-items: end; gap: 18px; border-top: 1px solid var(--line); padding: 20px 0; }
+.run-form label { display: grid; gap: 8px; color: var(--muted); font: 10px 'DM Mono', monospace; letter-spacing: 0.07em; text-transform: uppercase; }
+.run-form input { width: 100%; height: 42px; border: 1px solid #cbd3c9; border-radius: 2px; padding: 0 11px; background: #fbfcf9; color: var(--ink); font: 14px 'DM Sans', sans-serif; letter-spacing: 0; }
+.run-form input:focus { outline: 2px solid #78917f; outline-offset: 1px; border-color: transparent; }
+.run-form small { min-height: 14px; color: var(--muted); font: 10px 'DM Sans', sans-serif; letter-spacing: 0; text-transform: none; }
+.input-with-unit { position: relative; }
+.input-with-unit input { padding-right: 64px; }
+.input-with-unit > span { position: absolute; top: 50%; right: 11px; transform: translateY(-50%); color: var(--muted); font: 11px 'DM Sans', sans-serif; text-transform: none; }
+.run-results { border-top: 1px solid var(--line); }
+.run-details { display: flex; justify-content: space-between; gap: 16px; padding: 14px 0; color: var(--muted); font: 10px 'DM Mono', monospace; letter-spacing: 0.06em; }
+.metric-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; padding: 4px 0 22px; }
+.metric-card { display: grid; align-content: start; gap: 10px; min-height: 112px; padding: 15px; border: 1px solid var(--line); background: #fbfcf9; }
+.metric-card > span { color: var(--muted); font: 9px 'DM Mono', monospace; letter-spacing: 0.06em; }
+.metric-card strong { color: var(--forest); font: 600 clamp(18px, 2.4vw, 26px) 'DM Sans', sans-serif; }
+.metric-card small { color: var(--muted); font-size: 11px; }
+.results-note { margin: 0; padding: 0 0 26px; color: var(--muted); font-size: 12px; }
+.results-note a { color: var(--forest); font-weight: 600; }
+@keyframes pulse { 50% { box-shadow: 0 0 0 5px #d39a4520; } }
 @keyframes arrive { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 @media (max-width: 650px) {
   .page-shell { width: calc(100% - 36px); }
   .topbar { height: 62px; }
+  .topbar-links { gap: 14px; }
+  .topbar-links a { font-size: 11px; }
   .intro { padding: 52px 0 45px; }
   .intro::after { right: 2%; top: 74px; width: 108px; height: 108px; opacity: 0.65; }
   .product-form { grid-template-columns: 1fr; gap: 12px; }
@@ -91,4 +121,9 @@ h2 span { vertical-align: 3px; color: var(--muted); font: 11px 'DM Mono', monosp
   .stock { display: grid; justify-items: end; gap: 3px; font-size: 8px; }
   .row-arrow { display: none; }
   .catalog-footer, .page-footer { font-size: 8px; }
+  .run-form { grid-template-columns: 1fr; gap: 14px; }
+  .run-form .add-button { width: 100%; }
+  .run-details { display: grid; gap: 7px; }
+  .metric-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .metric-card:last-child { grid-column: 1 / -1; }
 }

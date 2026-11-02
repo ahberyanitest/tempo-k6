@@ -2,6 +2,11 @@ import http from 'k6/http';
 import { check, sleep } from 'k6';
 
 const baseUrl = __ENV.BASE_URL || 'http://localhost:8080';
+const peakVUs = Number(__ENV.K6_VUS || 15);
+const durationSeconds = Number(__ENV.K6_DURATION_SECONDS || 80);
+const rampUpSeconds = Math.max(1, Math.floor(durationSeconds * 0.25));
+const peakSeconds = Math.max(1, Math.floor(durationSeconds * 0.5));
+const rampDownSeconds = Math.max(1, durationSeconds - rampUpSeconds - peakSeconds);
 
 export const options = {
   scenarios: {
@@ -9,9 +14,9 @@ export const options = {
       executor: 'ramping-vus',
       startVUs: 1,
       stages: [
-        { duration: '20s', target: 5 },
-        { duration: '40s', target: 15 },
-        { duration: '20s', target: 0 },
+        { duration: `${rampUpSeconds}s`, target: Math.max(1, Math.ceil(peakVUs / 3)) },
+        { duration: `${peakSeconds}s`, target: peakVUs },
+        { duration: `${rampDownSeconds}s`, target: 0 },
       ],
       gracefulRampDown: '10s',
     },

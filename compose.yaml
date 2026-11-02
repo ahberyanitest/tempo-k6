@@ -150,6 +150,21 @@ services:
     depends_on:
       - gateway
 
+  k6-runner:
+    build:
+      context: .
+      dockerfile: k6-runner/Dockerfile
+    ports:
+      - "127.0.0.1:8090:8090"
+    volumes:
+      - ./k6:/scripts:ro
+    environment:
+      K6_SCRIPT: /scripts/browse.js
+      BASE_URL: http://gateway:8080
+      K6_UI_ORIGIN: http://localhost:5173
+    depends_on:
+      - gateway
+
 volumes:
   grafana-data:
   loki-data:
