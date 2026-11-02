@@ -56,6 +56,6 @@ The scenario ramps from 1 to 15 virtual users and checks that requests succeed, 
 docker compose down
 ```
 
-Use `docker compose down -v` only when you also want to delete persisted Grafana, Loki, Tempo, and Alloy data.
+Use `docker compose down -v` only when you also want to delete persisted Grafana, Loki, Tempo, Alloy, and PostgreSQL data.
 
 This is a local learning environment, not a production deployment. It uses demo credentials, samples every trace, has no authentication or TLS, stores telemetry locally, and mounts the Docker socket for log collection. Change those settings before exposing it beyond your machine.
