@@ -1,6 +1,13 @@
 spring:
   application:
     name: catalog
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/catalog}
+    username: ${SPRING_DATASOURCE_USERNAME:tempo}
+    password: ${SPRING_DATASOURCE_PASSWORD:tempo}
+  jpa:
+    hibernate:
+      ddl-auto: update
 
 server:
   port: ${SERVER_PORT:8081}
