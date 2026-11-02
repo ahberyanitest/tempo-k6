@@ -17,6 +17,7 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: docker
       CATALOG_URL: http://catalog:8081
+      INVENTORY_URL: http://inventory:8082
       OTEL_SERVICE_NAME: gateway
       MANAGEMENT_OTLP_TRACING_ENDPOINT: http://tempo:4318/v1/traces
       MANAGEMENT_OTLP_METRICS_EXPORT_ENABLED: "false"

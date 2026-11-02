@@ -20,12 +20,17 @@ docker compose up --build -d
 Open:
 
 - React app: <http://localhost:5173>
+- Gateway Swagger UI (Catalog and Inventory APIs): <http://localhost:8080/swagger-ui.html>
+- Catalog Swagger UI: <http://localhost:8081/swagger-ui.html>
+- Inventory Swagger UI: <http://localhost:8082/swagger-ui.html>
 - Grafana: <http://localhost:3000> (user `admin`, password `admin`)
 - Prometheus: <http://localhost:9090>
 - Tempo: <http://localhost:3200>
 - Loki: <http://localhost:3100>
 
 The demo catalog endpoint is `GET http://localhost:8080/api/products`. It returns three sample products and calls inventory once for each product. The inventory endpoint is `GET http://localhost:8082/api/inventory/{sku}`.
+
+Each Spring service publishes its OpenAPI document at `/v3/api-docs`. The gateway Swagger UI aggregates the Catalog and Inventory specifications and can send requests through the gateway.
 
 ## Run the performance test
 

@@ -4,10 +4,30 @@ spring:
   cloud:
     gateway:
       routes:
+        - id: catalog-openapi
+          uri: ${CATALOG_URL:http://localhost:8081}
+          predicates:
+            - Path=/catalog/v3/api-docs/**
+          filters:
+            - StripPrefix=1
+        - id: inventory-openapi
+          uri: ${INVENTORY_URL:http://localhost:8082}
+          predicates:
+            - Path=/inventory/v3/api-docs/**
+          filters:
+            - StripPrefix=1
         - id: catalog
           uri: ${CATALOG_URL:http://localhost:8081}
           predicates:
             - Path=/api/**
+
+springdoc:
+  swagger-ui:
+    urls:
+      - name: Catalog
+        url: /catalog/v3/api-docs
+      - name: Inventory
+        url: /inventory/v3/api-docs
 
 server:
   port: 8080
