@@ -49,8 +49,8 @@
       "gridPos": {"h": 8, "w": 24, "x": 0, "y": 10},
       "targets": [
         {
-          "expr": "sum by (application) (rate(http_server_requests_seconds_count{application=~\"gateway|catalog|inventory\"}[1m]))",
-          "legendFormat": "{{application}}",
+          "expr": "sum by (job) (rate(http_server_requests_seconds_count{job=~\"gateway|catalog|inventory\"}[1m]))",
+          "legendFormat": "{{job}}",
           "refId": "A"
         }
       ],
