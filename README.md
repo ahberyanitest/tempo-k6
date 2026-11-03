@@ -50,7 +50,7 @@ The default scenario ramps from 1 to 15 virtual users over 80 seconds and checks
 - **Service latency dashboard:** Grafana -> Dashboards -> Microservices -> Microservice Latency. It plots Tempo service-graph p95 latency and call rate by `client` and `server`.
 - **Service graph:** Grafana -> Explore -> Tempo -> Service Graph. Select Tempo as the trace source; Prometheus is already configured as the service-map metrics source. Run the k6 scenario first and allow a short time for spans and generated metrics to arrive.
 - **Traces:** Grafana -> Explore -> Tempo, then search by service name (`gateway`, `catalog`, or `inventory`). A request should show gateway -> catalog -> inventory spans.
-- **Logs:** Grafana -> Explore -> Loki. Alloy discovers Docker container logs automatically.
+- **Logs:** Grafana -> Explore -> Loki. Alloy discovers Docker container logs automatically. Request log lines include `trace_id` and `span_id`; filter by trace ID with `{service_name="gateway"} |= "trace_id=<trace-id>"`. The `TraceID` derived field links from a log line to its Tempo trace.
 - **Metrics:** Prometheus scrapes all three Spring services every five seconds. The dashboard also plots `http_server_requests_seconds_count`.
 
 ## Stop

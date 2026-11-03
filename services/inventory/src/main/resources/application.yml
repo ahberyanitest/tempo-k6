@@ -2,6 +2,10 @@ spring:
   application:
     name: inventory
 
+logging:
+  pattern:
+    correlation: '[trace_id=%X{traceId:-} span_id=%X{spanId:-}] '
+
 server:
   port: ${SERVER_PORT:8082}
 

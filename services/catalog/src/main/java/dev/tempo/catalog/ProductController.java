@@ -6,6 +6,8 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
@@ -26,6 +28,8 @@ import reactor.core.publisher.Mono;
 @RestController
 @RequestMapping("/api/products")
 public class ProductController {
+    private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
+
     private final WebClient inventoryClient;
     private final ProductRepository productRepository;
 
@@ -39,6 +43,7 @@ public class ProductController {
 
     @GetMapping
     public Mono<List<Product>> getProducts() {
+        logger.info("Listing products");
         return Flux.fromIterable(productRepository.findAll(Sort.by("sku")))
                 .flatMap(this::withInventory)
                 .collectList();
@@ -47,6 +52,7 @@ public class ProductController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Mono<Product> createProduct(@Valid @RequestBody CreateProductRequest request) {
+        logger.info("Creating product");
         String sku = request.sku().trim();
         if (productRepository.existsById(sku)) {
             throw duplicateSku();
@@ -63,6 +69,7 @@ public class ProductController {
 
     @GetMapping("/{sku}")
     public Mono<Product> getProduct(@PathVariable String sku) {
+        logger.info("Getting product");
         ProductEntity product = productRepository.findById(sku)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
         return withInventory(product);
