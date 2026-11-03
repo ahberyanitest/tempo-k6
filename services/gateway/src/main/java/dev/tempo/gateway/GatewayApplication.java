@@ -7,6 +7,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.context.annotation.Bean;
 
+import reactor.core.publisher.SignalType;
+
 @SpringBootApplication
 public class GatewayApplication {
     private static final Logger logger = LoggerFactory.getLogger(GatewayApplication.class);
@@ -17,9 +19,11 @@ public class GatewayApplication {
 
     @Bean
     GlobalFilter requestLoggingFilter() {
-        return (exchange, chain) -> {
-            logger.info("Handling gateway request");
-            return chain.filter(exchange);
-        };
+        return (exchange, chain) -> chain.filter(exchange)
+                .doFinally(signalType -> {
+                    if (signalType == SignalType.ON_COMPLETE) {
+                        logger.info("Handled gateway request");
+                    }
+                });
     }
 }
